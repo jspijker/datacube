@@ -1,0 +1,9 @@
+Package: datacube
+Type: Package
+Title: RIVM datacube package
+Version: 0.0.1
+Date: 2017-06-13
+Author: Maintainer: Job Spijker <job.spijker@rivm.nl>
+Description: Datacube package
+License: GPL-3
+LazyLoad: yes
