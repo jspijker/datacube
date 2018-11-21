@@ -6,7 +6,8 @@ The RIVM datacube is a repository of spatial grid based data, aimed at data-scie
 Please note: this is work in progress, do not expect a functional
 package yet.
 
-
+Installation in R , using the devtools package:
+devtools::install_git("https://gitl01-int-p.rivm.nl/spijkerj/datacube.git")
 
 code example
 ============
