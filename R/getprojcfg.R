@@ -10,6 +10,8 @@
 
 getprojcfg <- function(dir, script, setdir=TRUE) {
 
+    warning("datacube::getprojcfg function is depreciated")
+
     osinfo <- getenvinfo()
     if(!osinfo$isGit) {
         stop("this is not a git repository")

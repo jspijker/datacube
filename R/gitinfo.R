@@ -17,6 +17,8 @@ gitinfo <- function() {
     # branch: current branch
     # remote: list of remote urls
 
+    warning("datacube::gitinfo function is depreciated, use gitInfo instead")
+
     # how to call git binary
     git.bin <-"git"
 
@@ -64,11 +66,28 @@ gitinfo <- function() {
         }
     }
     # return list
-    return(list(status=status, commited=commited,
+    info <- list(status=status, commited=commited,
                 id=id,branch=branch,
                 toplevel=toplevel,
-                remote=remote))
+                remote=remote)
+    assign("gitinfo",info,env=.DatacubeConfig)
+    return(info)
 }
 
+gitInfo <- function(){
 
 
+    info <-list(
+                root=git2r::workdir(),
+                repo=basename(git2r::workdir()),
+                status=git2r::status(),
+                modified=ifelse(length(git2r::status()$unstaged)>0,TRUE,FALSE),
+                sha=git2r::sha(git2r::last_commit()),
+                branch=git2r::repository_head(git2r::repository())$name,
+                remote=git2r::remote_url()[1]
+                ) 
+    assign("gitinfo",info,env=.DatacubeConfig)
+
+    invisible(info)
+
+}

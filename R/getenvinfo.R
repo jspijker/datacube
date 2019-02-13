@@ -25,3 +25,7 @@ getenvinfo <- function() {
     return(osenv)
 }
 
+getOSinfo <- function() {
+    getenvinfo()
+}
+

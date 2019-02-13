@@ -4,7 +4,7 @@
 \alias{setprojkeyval}
 \title{set project key value pairs}
 \usage{
-setprojkeyval(scriptdir)
+setprojkeyval(scriptdir = NA)
 }
 \description{
 sets project key value pairs
