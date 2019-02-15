@@ -3,12 +3,12 @@
 \docType{data}
 \name{.DatacubeConfig}
 \alias{.DatacubeConfig}
-\title{Get git info}
+\title{Setup of datacube configuration environment}
 \format{An object of class \code{environment} of length 0.}
 \usage{
 .DatacubeConfig
 }
 \description{
-Get information about git repository
+Setup of datacube configuration environment
 }
 \keyword{datasets}

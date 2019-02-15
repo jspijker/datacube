@@ -5,13 +5,6 @@
 #' @export
 
 setprojkeyval <- function(scriptdir=NA) {
-    # 
-    #     keyval.project <- list(repository=scriptdir$repo,
-    #                project=scriptdir$project,
-    #                script=scriptdir$file)
-    #     keyval.project <- append(keyval.project,keyvalgit())
-    #     return(keyval.project)
-
 
     git <- gitInfo()
     dcinfo <- get("dcinfo",env=.DatacubeConfig)

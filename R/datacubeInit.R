@@ -1,6 +1,20 @@
-#' Init Datacube
+#' Initialization of the Datacube
 #'
-#' initialiaze datacube
+#' When the datacube is initialized it collects information about the
+#' running environment (e.g. OS, user) and the used git repository.
+#' Als a database connections is setup based on the information in the
+#' `.R.options` file.
+#' @param script the name of the running script in which the function is called, this script must exists
+#' @param workdir the name of the project directory within the repository, this will be the R working directory
+#' @param database the name of the database to connect to, database credentials must exists in the optionsfiles
+#' @param optionsfile name of the optionsfile
+#' @param setdir if true the a setwd() is used to set the working directory
+#' 
+#' @return this functions does not return anything
+#'
+#' Calling this function also creates a data directory in the working
+#' directory when it not exists
+#'
 #' @importFrom pgobjects PgObjectsInit
 #' @export
 

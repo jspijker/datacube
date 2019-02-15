@@ -1,7 +1,4 @@
-#'
-#' Get git info
-#'
-#' Get information about git repository
+#' Setup of datacube configuration environment
 #'
 #' @importFrom git2r repository 
 

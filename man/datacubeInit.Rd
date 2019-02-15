@@ -2,11 +2,31 @@
 % Please edit documentation in R/datacubeInit.R
 \name{datacubeInit}
 \alias{datacubeInit}
-\title{Init Datacube}
+\title{Initialization of the Datacube}
 \usage{
 datacubeInit(script, workdir, database = "datacube",
   optionsfile = "~/.R.options", setdir = TRUE)
 }
+\arguments{
+\item{script}{the name of the running script in which the function is called, this script must exists}
+
+\item{workdir}{the name of the project directory within the repository, this will be the R working directory}
+
+\item{database}{the name of the database to connect to, database credentials must exists in the optionsfiles}
+
+\item{optionsfile}{name of the optionsfile}
+
+\item{setdir}{if true the a setwd() is used to set the working directory}
+}
+\value{
+this functions does not return anything
+
+Calling this function also creates a data directory in the working
+directory when it not exists
+}
 \description{
-initialiaze datacube
+When the datacube is initialized it collects information about the
+running environment (e.g. OS, user) and the used git repository.
+Als a database connections is setup based on the information in the
+`.R.options` file.
 }
