@@ -60,10 +60,12 @@ datacubeInit <- function(script,workdir,database="datacube",
                   user=getOption(paste(database,"user",sep=".")),
                   passwd=getOption(paste(database,"password",sep=".")),
                   host=getOption(paste(database,"host",sep=".")),
-                  schema=getOption(paste(database,"schema",sep="."))
+                  schema=getOption(paste(database,"schema",sep=".")),
+                  blobs=getOption(paste(database,"blobs",sep="."))
                   )
 
     assign("pginfo",pginfo,env=.DatacubeConfig)
+    options(pgobj.blobs=pginfo$blobs)
 
 
     #### connect with database
