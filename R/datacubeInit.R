@@ -56,13 +56,22 @@ datacubeInit <- function(script,workdir,database="datacube",
     #### read options file
     readOptions(optionsfile)
 
-
-    #### connect with database
-    pgobjects::PgObjectsInit(dbname=getOption(paste(database,"dbname",sep=".")),
+    pginfo <- list(dbname=getOption(paste(database,"dbname",sep=".")),
                   user=getOption(paste(database,"user",sep=".")),
                   passwd=getOption(paste(database,"password",sep=".")),
                   host=getOption(paste(database,"host",sep=".")),
                   schema=getOption(paste(database,"schema",sep="."))
+                  )
+
+    assign("pginfo",pginfo,env=.DatacubeConfig)
+
+
+    #### connect with database
+    pgobjects::PgObjectsInit(dbname=pginfo$dbname,
+                  user=pginfo$user,
+                  passwd=pginfo$passwd,
+                  host=pginfo$host,
+                  schema=pginfo$schema
                   )
 
 
@@ -73,10 +82,12 @@ datacubeInit <- function(script,workdir,database="datacube",
 getDatacubeConfig <- function() {
 
     dcinfo <- get("dcinfo",env=.DatacubeConfig)
+    pginfo <- get("pginfo",env=.DatacubeConfig)
     keyvalProject <- get("keyvalProject",env=.DatacubeConfig)
 
 
     return(list(dcinfo=dcinfo,
+                pginfo=pginfo,
                 keyvalProject=keyvalProject))
 
 
