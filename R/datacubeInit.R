@@ -81,6 +81,8 @@ datacubeInit <- function(script,workdir,database="datacube",
 
 }
 
+#' drname add
+#' @export
 getDatacubeConfig <- function() {
 
     dcinfo <- get("dcinfo",env=.DatacubeConfig)

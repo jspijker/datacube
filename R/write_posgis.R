@@ -10,7 +10,7 @@
 #'
 #' @importFrom sf st_write
 #'
-#'
+#' @export
 
 
 write_postgis <- function(obj,layername,schema="gis") {
