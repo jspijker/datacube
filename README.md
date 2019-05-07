@@ -12,6 +12,6 @@ Installation in R , using the devtools package:
 code example
 ============
 
-Please see the dc-doc repository for an example
+Please see the [dc-doc](https://gitl01-int-p.rivm.nl/spijkerj/dc-doc/tree/master) repository for an example. You can find links to the Dutch manual [here](https://gitl01-int-p.rivm.nl/spijkerj/datacube/wikis/home)
 
 
