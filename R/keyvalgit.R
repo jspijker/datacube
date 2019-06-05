@@ -7,6 +7,7 @@
 keyvalgit <- function(){
     # creates a key/value list based on gitinfo(). This key/value list
     # can be used for pgobjects
+    warning("keyvalgit is depreciated, do not use")
 
     ginfo <- gitinfo()
     # ginfo.list <- list(git.id=ginfo$id,git.status=ginfo$status,
