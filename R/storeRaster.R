@@ -20,9 +20,28 @@
 #' @export
 
 
+dcstoreraster <- function(gridfile,blobname,kv) {
 
+    if(!file.exists(gridfile)) {
+        stop("dcstoreraster: grid file does not exists")
+    }
+
+    # create tif from grid
+    tif <- grid2tif(gridfile)
+
+    # store tif
+    b <- dcstore(filename=tif,name=blobname,kv)
+    invisible(b)
+
+}
+
+
+
+#' drname add
+#' @export
 storeRaster <- function(gridfile,blobname,kv,desc) {
 
+    warning("storeRaster is obsolete function, use dcstoreraster instead")
     # create tif from grid
     tif <- grid2tif(gridfile)
 
