@@ -65,4 +65,4 @@ grid2blob <- function(gridfile,blobname,keyval,desc,
     # legacy function
     warning("grid2blob is obsolete function,blobpath is ignored")
     storeRaster(gridfile,blobname,kv=keyval,desc)
-i
+}
