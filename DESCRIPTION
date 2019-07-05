@@ -7,5 +7,5 @@ Author: Maintainer: Job Spijker <job.spijker@rivm.nl>
 Description: Datacube package
 License: GPL-3
 LazyLoad: yes
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Imports: git2r
