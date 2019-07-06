@@ -42,7 +42,7 @@ dcstore <- function(filename,objname,kv) {
                name=objname,
                kv=append(getkeyval(),kv)
                )
-    return(b)
+    invisible(b)
 
 }
 
