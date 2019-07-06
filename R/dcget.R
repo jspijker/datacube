@@ -17,7 +17,7 @@
 #' @export
 
 
-dcget <- function(obj,update=FALSE,verbose=TRUE) {
+dcget <- function(obj,update=FALSE,verbose=FALSE) {
 
     if(verbose) cat("dcget:\n")
 
