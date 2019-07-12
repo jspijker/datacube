@@ -2,27 +2,40 @@
 Introduction
 ============
 
-The RIVM datacube is a data repository aimed at spatial grid based data, although it can manage any kind of data. It is used in our data-science projects involving spatial analyses, modeling and prediction It is suitable for combining field measurements, e.g. from monitoring networks, with other spatial data (e.g. soil types, groundwater levels, land use, altitude, crops, emission data etc.). All the spatial data in the datacube is georeferenced to the same extent, so maps can be stacked easily. These stacks are the actual datacubes we use in our machine learning models.
+The RIVM datacube is a data repository aimed at spatial grid based data, although it can manage any kind of data. It is used in our data-science projects involving spatial analyses, modeling and prediction. It is suitable for combining field measurements, e.g. from monitoring networks, with other spatial data (e.g. soil types, groundwater levels, land use, altitude, crops, emission data etc.). All the spatial data in the datacube is georeferenced to the same extent, so maps can be stacked easily. These stacks are the actual datacubes we use in our machine learning models.
 
 This package contains functions to work with GIS data and PostGIS, it manages data by storing data to the repository, generate meta-data, creates audit trails or data lineage paths, and stores versioning info. It is aimed at small teams working together with the same data. The datacube package makes it possible to work on projects which are reusable, reproducible and auditable.
 
-important
+Important
 =========
 
 *Please note:* this is work in progress. This package needs git and PostgreSQL/PostGIS for proper working. It assumes a Linux OS (it might work under Windows but we never tried).
 
 Installation in R , using the devtools package: `devtools::install_github("jspijker/datacube")` Please make sure you already have the fasterize and the here package installed.
 
+Future development
+------------------
+
+I presented this package at the useR!2019 conference. During the discussions I noticed that people really like the idea of a data repository and to have the possibility to create an audit trail for their data. However, the name of this package, datacube, is confusing. We use this for datacubes but it is not limited to datacubes, it can be used for any data or data-workflow.
+
+To make this package more useful for a general R audience, we will split this package into two parts. We keep all the stuff about datacubes and spatial rasters in our datacube package. It's the stuff we love and use, and it 'works for us'. The stuff about the data repository, audit trails etc. will go into a separate package, so it can be of use for others.
+
 Dependencies
 ============
 
-The datacube package uses 3 other related packages: pgobjects is a package to store R objects, either variables, functions, or complete environments, into a PostgreSQL database. The pgblobs package is an extension of pgobjects. If objects are to big to store in the database, like raster grids or spatial data, only the meta data is stored in the database and the file, or blob, is stored on a shared disk location. The localoptions package is used to read an options file with the datacube configuration:
+The datacube package uses 3 other related packages:
+
+1.  pgobjects is a package to store R objects, either variables, functions, or complete environments, into a PostgreSQL database.
+2.  The pgblobs package is an extension of pgobjects. If objects are to big to store in the database, like raster grids or spatial data, only the meta data is stored in the database and the file, or blob, is stored on a shared disk location.
+3.  The localoptions package is used to read an options file with the datacube configuration:
 
 These packages can be found on github:
 
-[gobjects](https://github.com/jspijker/pgobjects) [pgblobs](https://github.com/jspijker/pgblobs) [localoptions](https://github.com/jspijker/localoptions)
+-   [gobjects](https://github.com/jspijker/pgobjects)
+-   [pgblobs](https://github.com/jspijker/pgblobs)
+-   [localoptions](https://github.com/jspijker/localoptions)
 
-configuration
+Configuration
 =============
 
 For the configuration of the system the localoptions package is used. With localoptions an option file is read with the database configuration and file locations. The default location of this option file is ~/.R.options and looks like this:
@@ -39,19 +52,21 @@ For the configuration of the system the localoptions package is used. With local
     # location to store file blobs (shared network location)
     datacube.blobs /datacube/blobs
 
+After a correct configuration, you can initialize database and create the necessary tables:
+
+``` r
+library(pgobjects)
+createPgobjTables()
+```
+
 initialization
 ==============
 
-After the configuration is setup, one can load the necessary packages. We prefer to use pacman for that.
+After the database is setup, one can load the necessary packages. We prefer to use pacman for that.
 
 ``` r
 # load packages
 if (!require("pacman")) install.packages("pacman")
-```
-
-    ## Loading required package: pacman
-
-``` r
 pacman::p_load(parallel,raster,ggplot2,sp,maptools,RCurl,
                RPostgreSQL,rgdal,gdalUtils,sf,fasterize,foreign,tidyverse,here)
 
@@ -79,9 +94,7 @@ datacubeInit(script="README.Rmd",workdir=".")
     ## changing working directory to: /home/spijkerj/rivm/git/datacube/. 
     ## Creating data directory
 
-    ## Loading required package: digest
-
-import, tidy and transform data
+Import, tidy and transform data
 ===============================
 
 To demonstrate the datacube we import data from a source location, and then tidy and transform it. For this demonstration we use the 'groenbeleving' indicator from the Dutch Health Atlas. This indicator is about the percentage of people within a municipality who are satisfied about the amount of green area in their living environment. The data is published as WFS service in the RIVM geoservice.
@@ -229,7 +242,7 @@ file.remove(fname.attr.new)
 b <- dcget(objname.attr)
 ```
 
-    ## storing data:  2e717927-8624-4d03-b42e-c77a231f8b31
+    ## storing data:  fc0eaf13-9644-46e7-8598-6077f7298d3c
 
 After we got our object using `dcget` the variable `b` contains als our meta data, including information about the script which created the data:
 
@@ -251,7 +264,7 @@ print(b$audit$parent$repo)
 
     ## [1] "datacube"
 
-data directory
+Data directory
 ==============
 
 The datacube creates a distinct `data` directory in the current workdir to store all te data. Since this markdown script is part of a package we destroy the data directory.

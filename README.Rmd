@@ -6,7 +6,7 @@ output: rmarkdown::github_document
 
 The RIVM datacube is a data repository aimed at spatial grid based data,
 although it can manage any kind of data. It is used in our data-science
-projects involving spatial analyses, modeling and prediction It is
+projects involving spatial analyses, modeling and prediction. It is
 suitable for combining field measurements, e.g. from monitoring networks,
 with other spatial data (e.g. soil types, groundwater levels, land use,
 altitude, crops,  emission data etc.). All the spatial data in the
@@ -21,7 +21,7 @@ versioning info. It is aimed at small teams working together with the
 same data. The datacube package makes it possible to work on projects 
 which are reusable, reproducible and auditable.
 
-# important
+# Important
 
 *Please note:* this is work in progress. This package needs git and
 PostgreSQL/PostGIS for proper working. It assumes a Linux OS (it might
@@ -32,27 +32,38 @@ Installation in R , using the devtools package:
 Please make sure you already have the fasterize and the here package
 installed.
 
+## Future development
 
+I presented this package at the useR!2019 conference. During the
+discussions I noticed that people really like the idea of a data
+repository and to have the possibility to create an audit trail for
+their data. However, the name of this package, datacube, is confusing.
+We use this for datacubes but it is not limited to datacubes, it can
+be used for any data or data-workflow.
+
+To make this package more useful for a general R audience, we will split
+this package into two parts. We keep all the stuff about datacubes and
+spatial rasters in our datacube package. It's the stuff we love and use,
+and it 'works for us'. The stuff about the data repository, audit trails
+etc. will go into a separate package, so it can be of use for others.
 
 # Dependencies
 
-The datacube package uses 3 other related packages: pgobjects is a package
-to store R objects, either variables, functions, or complete environments,
-into a PostgreSQL database. The pgblobs package is an extension of
-pgobjects. If objects are to big to store in the database, like raster
-grids or spatial data, only the meta data is stored in the database and
-the file, or blob, is stored on a shared disk location. The localoptions
-package is used to read an options file with the datacube configuration:
+The datacube package uses 3 other related packages: 
+
+ 1. pgobjects is a package to store R objects, either variables, functions, or complete environments, into a PostgreSQL database. 
+ 2. The pgblobs package is an extension of pgobjects. If objects are to big to store in the database, like raster grids or spatial data, only the meta data is stored in the database and the file, or blob, is stored on a shared disk location. 
+ 3.   The localoptions package is used to read an options file with the datacube configuration:
 
 These packages can be found on github:
 
-[gobjects](https://github.com/jspijker/pgobjects)
-[pgblobs](https://github.com/jspijker/pgblobs)
-[localoptions](https://github.com/jspijker/localoptions)
+ * [gobjects](https://github.com/jspijker/pgobjects)
+ * [pgblobs](https://github.com/jspijker/pgblobs)
+ * [localoptions](https://github.com/jspijker/localoptions)
 
 
 
-# configuration
+# Configuration
 
 For the configuration of the system the localoptions package is used.
 With localoptions an option file is read with the database
@@ -74,9 +85,21 @@ datacube.blobs /datacube/blobs
 
 ```
 
+
+
+After a correct configuration, you can initialize database and create
+the necessary tables:
+
+```{r,eval=FALSE}
+
+library(pgobjects)
+createPgobjTables()
+
+```
+
 # initialization
 
-After the configuration is setup, one can load the necessary packages.
+After the database is setup, one can load the necessary packages.
 We prefer to use pacman for that.
 
 ```{r}
@@ -117,7 +140,7 @@ datacubeInit(script="README.Rmd",workdir=".")
 
 ```
 
-# import, tidy and transform data
+# Import, tidy and transform data
 
 To demonstrate the datacube we import data from a source location, and
 then tidy and transform it. For this demonstration we use the 'groenbeleving' indicator from
@@ -250,7 +273,7 @@ print(b$audit$parent$project)
 print(b$audit$parent$repo)
 ```
 
-# data directory
+# Data directory
 
 The datacube creates a distinct `data` directory in the current
 workdir to store all te data. Since this markdown script is part of a

@@ -26,16 +26,28 @@ body {
 <body>
 
 <h1 id="introduction">Introduction</h1>
-<p>The RIVM datacube is a data repository aimed at spatial grid based data, although it can manage any kind of data. It is used in our data-science projects involving spatial analyses, modeling and prediction It is suitable for combining field measurements, e.g. from monitoring networks, with other spatial data (e.g. soil types, groundwater levels, land use, altitude, crops, emission data etc.). All the spatial data in the datacube is georeferenced to the same extent, so maps can be stacked easily. These stacks are the actual datacubes we use in our machine learning models.</p>
+<p>The RIVM datacube is a data repository aimed at spatial grid based data, although it can manage any kind of data. It is used in our data-science projects involving spatial analyses, modeling and prediction. It is suitable for combining field measurements, e.g. from monitoring networks, with other spatial data (e.g. soil types, groundwater levels, land use, altitude, crops, emission data etc.). All the spatial data in the datacube is georeferenced to the same extent, so maps can be stacked easily. These stacks are the actual datacubes we use in our machine learning models.</p>
 <p>This package contains functions to work with GIS data and PostGIS, it manages data by storing data to the repository, generate meta-data, creates audit trails or data lineage paths, and stores versioning info. It is aimed at small teams working together with the same data. The datacube package makes it possible to work on projects which are reusable, reproducible and auditable.</p>
-<h1 id="important">important</h1>
+<h1 id="important">Important</h1>
 <p><em>Please note:</em> this is work in progress. This package needs git and PostgreSQL/PostGIS for proper working. It assumes a Linux OS (it might work under Windows but we never tried).</p>
 <p>Installation in R , using the devtools package: <code>devtools::install_github(&quot;jspijker/datacube&quot;)</code> Please make sure you already have the fasterize and the here package installed.</p>
+<h2 id="future-development">Future development</h2>
+<p>I presented this package at the useR!2019 conference. During the discussions I noticed that people really like the idea of a data repository and to have the possibility to create an audit trail for their data. However, the name of this package, datacube, is confusing. We use this for datacubes but it is not limited to datacubes, it can be used for any data or data-workflow.</p>
+<p>To make this package more useful for a general R audience, we will split this package into two parts. We keep all the stuff about datacubes and spatial rasters in our datacube package. It's the stuff we love and use, and it 'works for us'. The stuff about the data repository, audit trails etc. will go into a separate package, so it can be of use for others.</p>
 <h1 id="dependencies">Dependencies</h1>
-<p>The datacube package uses 3 other related packages: pgobjects is a package to store R objects, either variables, functions, or complete environments, into a PostgreSQL database. The pgblobs package is an extension of pgobjects. If objects are to big to store in the database, like raster grids or spatial data, only the meta data is stored in the database and the file, or blob, is stored on a shared disk location. The localoptions package is used to read an options file with the datacube configuration:</p>
+<p>The datacube package uses 3 other related packages:</p>
+<ol>
+<li>pgobjects is a package to store R objects, either variables, functions, or complete environments, into a PostgreSQL database.</li>
+<li>The pgblobs package is an extension of pgobjects. If objects are to big to store in the database, like raster grids or spatial data, only the meta data is stored in the database and the file, or blob, is stored on a shared disk location.</li>
+<li>The localoptions package is used to read an options file with the datacube configuration:</li>
+</ol>
 <p>These packages can be found on github:</p>
-<p><a href="https://github.com/jspijker/pgobjects">gobjects</a> <a href="https://github.com/jspijker/pgblobs">pgblobs</a> <a href="https://github.com/jspijker/localoptions">localoptions</a></p>
-<h1 id="configuration">configuration</h1>
+<ul>
+<li><a href="https://github.com/jspijker/pgobjects">gobjects</a></li>
+<li><a href="https://github.com/jspijker/pgblobs">pgblobs</a></li>
+<li><a href="https://github.com/jspijker/localoptions">localoptions</a></li>
+</ul>
+<h1 id="configuration">Configuration</h1>
 <p>For the configuration of the system the localoptions package is used. With localoptions an option file is read with the database configuration and file locations. The default location of this option file is ~/.R.options and looks like this:</p>
 <pre><code># database host, database name, user, and password
 datacube.host localhost
@@ -48,12 +60,14 @@ datacube.schema datacube
 
 # location to store file blobs (shared network location)
 datacube.blobs /datacube/blobs</code></pre>
+<p>After a correct configuration, you can initialize database and create the necessary tables:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pgobjects)
+<span class="kw">createPgobjTables</span>()</code></pre></div>
 <h1 id="initialization">initialization</h1>
-<p>After the configuration is setup, one can load the necessary packages. We prefer to use pacman for that.</p>
+<p>After the database is setup, one can load the necessary packages. We prefer to use pacman for that.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load packages</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</code></pre></div>
-<pre><code>## Loading required package: pacman</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(parallel,raster,ggplot2,sp,maptools,RCurl,
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)
+pacman<span class="op">::</span><span class="kw">p_load</span>(parallel,raster,ggplot2,sp,maptools,RCurl,
                RPostgreSQL,rgdal,gdalUtils,sf,fasterize,foreign,tidyverse,here)
 
 <span class="co"># packages on github to use</span>
@@ -69,10 +83,8 @@ devtools<span class="op">::</span><span class="kw">load_all</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># initialize datacube</span>
 <span class="kw">datacubeInit</span>(<span class="dt">script=</span><span class="st">&quot;README.Rmd&quot;</span>,<span class="dt">workdir=</span><span class="st">&quot;.&quot;</span>)</code></pre></div>
 <pre><code>## changing working directory to: /home/spijkerj/rivm/git/datacube/. 
-## Creating data directory
-
-## Loading required package: digest</code></pre>
-<h1 id="import-tidy-and-transform-data">import, tidy and transform data</h1>
+## Creating data directory</code></pre>
+<h1 id="import-tidy-and-transform-data">Import, tidy and transform data</h1>
 <p>To demonstrate the datacube we import data from a source location, and then tidy and transform it. For this demonstration we use the 'groenbeleving' indicator from the Dutch Health Atlas. This indicator is about the percentage of people within a municipality who are satisfied about the amount of green area in their living environment. The data is published as WFS service in the RIVM geoservice.</p>
 <p>We'll import the spatial vector data and then transform it to a georeferenced 25x25m raster. The used georeference is a standard georeference used for all the raster layers, so all the layers can be stacked into a multidimensional raster stack. This stack is subsequently used in our machine learning models. Default, the Dutch 'Rijksdriehoekmeting' is used as projection (EPSG 28992), this can be changed by the user.</p>
 <p>In the next section we set our variables and download the data:</p>
@@ -177,7 +189,7 @@ f &lt;-<span class="st"> </span><span class="kw">dcstore</span>(<span class="dt"
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(fname.attr.new) </code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span><span class="kw">dcget</span>(objname.attr)</code></pre></div>
-<pre><code>## storing data:  2e717927-8624-4d03-b42e-c77a231f8b31</code></pre>
+<pre><code>## storing data:  fc0eaf13-9644-46e7-8598-6077f7298d3c</code></pre>
 <p>After we got our object using <code>dcget</code> the variable <code>b</code> contains als our meta data, including information about the script which created the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(b<span class="op">$</span>audit<span class="op">$</span>parent<span class="op">$</span>script)</code></pre></div>
 <pre><code>## [1] &quot;README.Rmd&quot;</code></pre>
@@ -185,7 +197,7 @@ f &lt;-<span class="st"> </span><span class="kw">dcstore</span>(<span class="dt"
 <pre><code>## [1] &quot;.&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(b<span class="op">$</span>audit<span class="op">$</span>parent<span class="op">$</span>repo)</code></pre></div>
 <pre><code>## [1] &quot;datacube&quot;</code></pre>
-<h1 id="data-directory">data directory</h1>
+<h1 id="data-directory">Data directory</h1>
 <p>The datacube creates a distinct <code>data</code> directory in the current workdir to store all te data. Since this markdown script is part of a package we destroy the data directory.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unlink</span>(<span class="st">&quot;./data/&quot;</span>,<span class="dt">recursive=</span><span class="ot">TRUE</span>)</code></pre></div>
 
