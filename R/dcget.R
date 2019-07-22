@@ -62,7 +62,7 @@ dcget <- function(obj,update=FALSE,verbose=FALSE) {
         kv <- list( script=dckeyval$script,
                    repo=dckeyval$repo,
                    type="audit",
-                   audit=objname,
+                   audit=obj,
                    time=as.character(lubridate::now()))
 
         if (verbose) cat("storing audit object\n")
