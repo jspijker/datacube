@@ -10,8 +10,8 @@ read_postgis(layername)
 \item{layername}{name of layer}
 }
 \value{
-returns sf geo object
+a sf object with the postgis layer
 }
 \description{
-Write a spatial vector object to the datacube postgis tables
+Read a spatial vector object from the datacube postgis tables
 }

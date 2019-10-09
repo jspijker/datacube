@@ -1,10 +1,10 @@
 #' Read a spatial vector object from postgis
 #'
-#' Write a spatial vector object to the datacube postgis tables
+#' Read a spatial vector object from the datacube postgis tables
 #' 
 #' @param layername name of layer
 #'
-#' @return returns sf geo object
+#' @return a sf object with the postgis layer
 #'
 #' @importFrom sf st_read
 #'
