@@ -8,6 +8,9 @@
 #' @return data.frame with object names, description and automatically
 #' generated meta data
 #'
+#'
+#' @importFrom dplyr select filter
+#' @importFrom tidyr spread 
 #' @export
 
 
