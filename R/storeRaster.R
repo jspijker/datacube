@@ -3,7 +3,7 @@
 #' This function stores a raster grid file as blob into the datacube
 #'
 #' @param gridfile filename of the raster grid file
-#' @param obj objectname of the blob
+#' @param blobname objectname of the blob
 #' @param kv meta data key-value pairs
 #' @param desc blob object description
 #'
@@ -20,7 +20,7 @@
 #' @export
 
 
-dcstoreraster <- function(gridfile,obj,kv) {
+dcstoreraster <- function(gridfile,blobname,kv) {
 
     if(!file.exists(gridfile)) {
         stop("dcstoreraster: grid file does not exists")
@@ -30,7 +30,7 @@ dcstoreraster <- function(gridfile,obj,kv) {
     tif <- grid2tif(gridfile)
 
     # store tif
-    b <- dcstore(filename=tif,objname=obj,kv)
+    b <- dcstore(filename=tif,objname=blobname,kv)
     invisible(b)
 
 }
