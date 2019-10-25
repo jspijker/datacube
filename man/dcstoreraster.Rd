@@ -4,12 +4,12 @@
 \alias{dcstoreraster}
 \title{Store a raster into the datacube}
 \usage{
-dcstoreraster(gridfile, blobname, kv)
+dcstoreraster(gridfile, obj, kv)
 }
 \arguments{
 \item{gridfile}{filename of the raster grid file}
 
-\item{blobname}{objectname of the blob}
+\item{obj}{objectname of the blob}
 
 \item{kv}{meta data key-value pairs}
 
